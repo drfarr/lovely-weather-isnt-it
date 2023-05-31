@@ -1,4 +1,3 @@
-import { IWeatherResource } from "@/utils/WeatherAdapter.class";
 import { test, expect } from "@playwright/test";
 
 test("should return a 400 if location is missing", async ({ request }) => {

@@ -1,4 +1,5 @@
 import WeatherAPI from "@/utils/WeatherAPI.class";
+import { WeatherResourceAdapter } from "@/utils/WeatherAdapter.class";
 import { NextResponse } from "next/server";
 /**
  * Wrapper for a next response makes the code a bit easier to read.
@@ -42,8 +43,10 @@ export async function GET(request: Request) {
   try {
     const api = new WeatherAPI();
     await api.query(query);
-    const data = api.getData();
-    if (data) {
+    const response = api.getData();
+
+    if (response?.locations) {
+      const data = new WeatherResourceAdapter(response);
       return jsonResponse({
         data,
         message: "ok",
