@@ -1,4 +1,5 @@
 "use client";
+import Card from "@/components/Card";
 import useWeather from "@/hooks/useWeather";
 import { formatDate, formatHours, formatTempreature } from "@/utils";
 import { Unit } from "@/utils/WeatherAPI.class";
@@ -83,7 +84,7 @@ export default function Home() {
           </div>
 
           {data && (
-            <ul className="space-y-2 font-medium">
+            <ul className="space-y-6 font-medium text-center mt-20">
               <li>
                 <h1 className="text-3xl">{data.address}</h1>
               </li>
@@ -92,6 +93,7 @@ export default function Home() {
               </li>
               <li>
                 <Image
+                  className="mx-auto"
                   alt={data.icon}
                   width={200}
                   height={50}
@@ -126,57 +128,50 @@ export default function Home() {
             </button>
           </div>
           <div className="p-4">
-            <h2>Daily Overview</h2>
+            <h2 className="text-2xl mb-4">Daily Overview</h2>
             {data && (
               <div>
                 <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                    <p className="text-2xl">Humdity</p>
-                    <p className="text-2xl">{data.humidity}</p>
-                  </div>
-                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                    <p className="text-2xl">Cloud Cover</p>
-                    <p className="text-2xl">{data.cloudCover}</p>
-                  </div>
+                  <Card title="Humdity" value={data.humidity} />
+                  <Card title="Cloud Cover" value={data.cloudCover} />
                 </div>
                 <div className="grid grid-cols-4 gap-4 mb-4">
-                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                    <p className="text-2xl">Min temp</p>
-                    <p className="text-2xl">{formatTemp(data.minTemp)}</p>
-                  </div>
-                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                    <div className="text-2xl text-gray-400 dark:text-gray-500">
-                      <p className="text-2xl">Max temp</p>
-                      <p className="text-2xl">{formatTemp(data.maxTemp)}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                    <p className="text-2xl">Sunrise</p>
-                    <p className="text-2xl">{formatHours(data.sunRiseTime)}</p>
-                  </div>
-                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                    <p className="text-2xl">Sunset</p>
-                    <p className="text-2xl">{formatHours(data.sunSetTime)}</p>
-                  </div>
+                  <Card title="Min Temp" value={formatTemp(data.minTemp)} />
+                  <Card title="Max Temp" value={formatTemp(data.maxTemp)} />
+                  <Card title="Sunrise" value={formatHours(data.sunRiseTime)} />
+                  <Card title="Sunset" value={formatHours(data.sunSetTime)} />
                 </div>
               </div>
             )}
           </div>
-          <div className="p-4">
+
+          <div className="p-4 inline-flex w-full flex-col">
+            <h2 className="text-2xl mb-4 h-24">
+              {data?.days?.length} Day Forecast
+            </h2>
+
             <div className="grid grid-cols-5 gap-4 mb-4">
               {data &&
+                data.days.length &&
                 data.days.map((data, idx) => {
                   return (
                     <div
                       key={idx}
                       className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800"
                     >
-                      <p className="text-2xl text-white dark:text-gray-500">
-                        {formatDate(data.date)}
-                        {data.icon}
-                        {formatTemp(data.maxTemp)}
-                        {formatTemp(data.minTemp)}
-                      </p>
+                      <Card
+                        tall
+                        title={formatDate(data.date)}
+                        value={`${formatTemp(data.maxTemp)} / 
+                        ${formatTemp(data.minTemp)}`}
+                      >
+                        <Image
+                          alt={data.icon}
+                          width={100}
+                          height={50}
+                          src={`/icons/${"cloudy"}.svg`}
+                        />
+                      </Card>
                     </div>
                   );
                 })}
