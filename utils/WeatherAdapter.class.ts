@@ -27,8 +27,7 @@ export interface IWeatherResource extends IWeatherResourceBase {
   id: string;
   name: string;
   address: string;
-  units: string;
-  location: string;
+  units: Unit;
   currentTemp: number;
   sunRiseTime: string;
   sunSetTime: string;
