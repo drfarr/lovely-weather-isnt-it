@@ -1,4 +1,4 @@
-import WeatherAPI from "@/utils/WeatherAPI.class";
+import WeatherAPI, { Unit } from "@/utils/WeatherAPI.class";
 import { WeatherResourceAdapter } from "@/utils/WeatherAdapter.class";
 import { NextResponse } from "next/server";
 /**
@@ -32,6 +32,7 @@ const jsonResponse = ({
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q");
+  const unit = searchParams.get("unit");
   if (!query) {
     return jsonResponse({
       data: [],
@@ -41,7 +42,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const api = new WeatherAPI();
+    const api = new WeatherAPI((unit as Unit) ?? Unit.metric);
     await api.query(query);
     const response = api.getData();
 

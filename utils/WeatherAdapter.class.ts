@@ -139,7 +139,6 @@ export class WeatherResourceAdapter extends WeatherResource {
   parseResponse(data: IResponse): IWeatherResource {
     const output = {} as IWeatherResource;
 
-    console.log(data.locations);
     if (data?.locations && data?.columns) {
       const { locations, columns } = data;
       const locationKey = Object.keys(locations)[0];

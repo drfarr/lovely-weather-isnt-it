@@ -16,20 +16,24 @@ interface QueryFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
+const useUnits = ({ currentUnits = Unit.metric }: { currentUnits: Unit }) => {
+  const [displayUnits, setDisplayUnits] = useState<Unit>(currentUnits);
+
+  return { units: displayUnits, setUnits: setDisplayUnits };
+};
+
 export default function Home() {
   const [query, setQuery] = useState<string>("brighton");
-  const { data: _data, error, loading } = useWeather<IWeatherResource>(query);
-  const [displayUnits, setDisplayUnits] = useState(_data?.units);
+  const { units, setUnits } = useUnits({ currentUnits: Unit.metric });
+  const {
+    data: _data,
+    error,
+    loading,
+  } = useWeather<IWeatherResource>({ query, units });
 
   const data: IWeatherResource | null = useMemo(() => {
     return _data?.name && !loading ? _data : null;
   }, [_data, loading]);
-
-  useEffect(() => {
-    if (data?.units) {
-      setDisplayUnits(data?.units);
-    }
-  }, [data?.units]);
 
   const handleSubmit = (e: React.SyntheticEvent<QueryFormElement>): void => {
     e.preventDefault();
@@ -39,7 +43,7 @@ export default function Home() {
   };
 
   const formatTemp = (value: number) => {
-    return formatTempreature(value, displayUnits ?? Unit.metric);
+    return formatTempreature(value, units);
   };
 
   return (
@@ -134,13 +138,13 @@ export default function Home() {
               <div className="p-4 flex flex-row-reverse ">
                 {Object.keys(Unit).map((unit, idx) => {
                   const classes =
-                    unit === displayUnits
+                    unit === units
                       ? "bg-white text-black"
                       : "bg-teritary text-white";
                   return (
                     <a
                       onClick={() => {
-                        setDisplayUnits(unit as Unit);
+                        setUnits(unit as Unit);
                       }}
                       key={idx}
                       className={`${classes} cursor-pointer rounded-full ml-2 p-2 w-10 h-9"`}

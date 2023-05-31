@@ -1,3 +1,4 @@
+import { Unit } from "@/utils/WeatherAPI.class";
 import { useEffect, useMemo, useReducer, useRef } from "react";
 
 interface State<T> {
@@ -19,16 +20,23 @@ type Action<T> =
  * @param query
  * @returns
  */
-function useWeather<T = unknown>(query?: string): State<T> {
+function useWeather<T = unknown>({
+  query,
+  units,
+}: {
+  query?: string;
+  units: Unit;
+}): State<T> {
   const cache = useRef<Cache<T>>({});
   const url = useMemo(() => {
-    return `/api/weather?q=${query}`;
-  }, [query]);
+    return `/api/weather?q=${query}&unit=${units}`;
+  }, [query, units]);
   const cancelRequest = useRef<boolean>(false);
 
   const initialState: State<T> = {
     error: undefined,
     data: undefined,
+    loading: true,
   };
 
   const fetchReducer = (state: State<T>, action: Action<T>): State<T> => {
@@ -51,11 +59,13 @@ function useWeather<T = unknown>(query?: string): State<T> {
 
     cancelRequest.current = false;
 
+    const cacheKey = `${query}${units}`;
+
     const fetchData = async () => {
       dispatch({ type: "loading" });
 
-      if (cache.current[query]) {
-        dispatch({ type: "fetched", payload: cache.current[query] });
+      if (cache.current[cacheKey]) {
+        dispatch({ type: "fetched", payload: cache.current[cacheKey] });
         return;
       }
 
@@ -69,7 +79,7 @@ function useWeather<T = unknown>(query?: string): State<T> {
           data: { data: payload },
         } = (await response.json()) as { data: { data: T } };
 
-        cache.current[query] = payload;
+        cache.current[cacheKey] = payload;
 
         if (cancelRequest.current) {
           return;
@@ -90,8 +100,8 @@ function useWeather<T = unknown>(query?: string): State<T> {
     return () => {
       cancelRequest.current = true;
     };
-  }, [url, query]);
-  console.log(state);
+  }, [url, query, units]);
+
   return state;
 }
 
