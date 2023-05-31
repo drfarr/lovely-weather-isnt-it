@@ -27,10 +27,23 @@ export enum WeatherIcon {
   "clear-night" = "clear-night",
 }
 /**
+ * This object has many more params from the API.
+ * But only seems to contain label information for properties.
+ * For now we only use the mint (min tempreature) value to obtain the units of the data i.e centigrade.
+ */
+interface IColumn {
+  mint: {
+    id: string;
+    name: string;
+    type: number;
+    unit: string;
+  };
+}
+/**
  * The main response body from VisualCrossingWebServices api
  */
 export interface IResponse {
-  columns: any[];
+  columns: IColumn;
   locations: Record<string, ILocation>;
   message: string[] | null;
   queryCost: number;
