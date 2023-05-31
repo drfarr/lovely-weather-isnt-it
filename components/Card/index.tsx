@@ -12,19 +12,19 @@ export default function Card({
   tall,
 }: {
   title: string;
-  value: string | number;
+  value: string | number | null;
   children?: React.ReactNode;
   tall?: boolean;
 }): JSX.Element {
   return (
     <div
-      className={`flex items-center w-full flex-col text-center justify-center min-h-full ${
-        tall ? "h-52" : "h-28"
+      className={`flex p-10 space-y-3 items-center w-full flex-col text-center justify-center min-h-full ${
+        tall ? "h-52" : "h-32"
       } rounded bg-primary`}
     >
-      <p className="text-xl">{title}</p>
-      <p>{children}</p>
-      <p className="text-lg">{value}</p>
+      <p className="text-lg w-full">{title}</p>
+      <div className="w-full">{children}</div>
+      <p className="text-md">{value}</p>
     </div>
   );
 }
