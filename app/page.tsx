@@ -1,50 +1,24 @@
-const data = {
-  location: "Brighton",
-  units: "metric",
-  date: "2023-05-30T00:00:00+01:00",
-  currentTemp: 15.3,
-  icon: "cloudy-day",
-  sunRiseTime: "2023-05-30T00:00:00+01:00",
-  sunSetTime: "2023-05-30T00:00:00+01:00",
-  humidity: 69.4,
-  cloudCover: 26.9,
-  maxTemp: 15.7,
-  minTemp: 12.8,
-  conditions: "Clear",
-  days: [
-    {
-      date: "2023-05-31T00:00:00+01:00",
-      icon: "",
-      maxTemp: 18.3,
-      minTemp: 11.7,
-    },
-    {
-      date: "2023-06-01T00:00:00+01:00",
-      icon: "",
-      maxTemp: 17.5,
-      minTemp: 11.2,
-    },
-    {
-      date: "2023-06-02T00:00:00+01:00",
-      icon: "",
-      maxTemp: 16.2,
-      minTemp: 10,
-    },
-    {
-      date: "2023-06-03T00:00:00+01:00",
-      icon: "",
-      maxTemp: 17.7,
-      minTemp: 10.1,
-    },
-    {
-      date: "2023-06-04T00:00:00+01:00",
-      icon: "",
-      maxTemp: 16.2,
-      minTemp: 11.4,
-    },
-  ],
-};
+"use client";
+import useWeather from "@/hooks/useWeather";
+import { IWeatherResource } from "@/utils/WeatherAdapter.class";
+import { useState } from "react";
+
 export default function Home() {
+  const [query, setQuery] = useState<string>("brighton");
+  const { data, error, loading } = useWeather<IWeatherResource>(query);
+
+  if (error) {
+    return "Something went wrong";
+  }
+
+  if (loading) {
+    return "Loading";
+  }
+
+  if (!data?.name && !loading) {
+    return "No data";
+  }
+
   return (
     <main>
       <aside
