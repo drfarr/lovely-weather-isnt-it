@@ -3,6 +3,13 @@ import useWeather from "@/hooks/useWeather";
 import { IWeatherResource } from "@/utils/WeatherAdapter.class";
 import { useState } from "react";
 
+interface FormElements extends HTMLFormControlsCollection {
+  queryInput: HTMLInputElement;
+}
+interface QueryFormElement extends HTMLFormElement {
+  readonly elements: FormElements;
+}
+
 export default function Home() {
   const [query, setQuery] = useState<string>("brighton");
   const { data, error, loading } = useWeather<IWeatherResource>(query);
@@ -19,6 +26,13 @@ export default function Home() {
     return "No data";
   }
 
+  const handleSubmit = (e: React.SyntheticEvent<QueryFormElement>): void => {
+    e.preventDefault();
+    const value = e.currentTarget.elements.queryInput.value;
+
+    setQuery(value);
+  };
+
   return (
     <main>
       <aside
@@ -28,21 +42,15 @@ export default function Home() {
       >
         <div className="h-full px-3 py-4 overflow-y-auto bg-primary">
           <div className="">
-            <form>
-              <label
-                htmlFor="default-search"
-                className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-              >
-                Search
-              </label>
+            <form onSubmit={handleSubmit}>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"></div>
                 <input
                   type="search"
-                  id="default-search"
+                  id="queryInput"
+                  name="search"
                   className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-white focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Search "
-                  required
+                  placeholder="Search"
                 />
                 <button
                   type="submit"
@@ -67,6 +75,7 @@ export default function Home() {
               </div>
             </form>
           </div>
+
           <ul className="space-y-2 font-medium">
             <li>
               <h1 className="text-3xl whitespace-nowrap">{data.location}</h1>
