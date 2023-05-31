@@ -36,7 +36,7 @@ interface IColumn {
     id: string;
     name: string;
     type: number;
-    unit: string;
+    unit: "degC" | "degF";
   };
 }
 /**
