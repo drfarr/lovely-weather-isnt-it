@@ -1,6 +1,7 @@
 "use client";
 import useWeather from "@/hooks/useWeather";
 import { IWeatherResource } from "@/utils/WeatherAdapter.class";
+import Image from "next/image";
 import { useState } from "react";
 
 interface FormElements extends HTMLFormControlsCollection {
@@ -37,10 +38,10 @@ export default function Home() {
     <main>
       <aside
         id="default-sidebar"
-        className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+        className="fixed top-0 left-0 z-40 w-96 h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-primary">
+        <div className="h-full px-3 py-4 bg-primary">
           <div className="">
             <form onSubmit={handleSubmit}>
               <div className="relative">
@@ -57,7 +58,6 @@ export default function Home() {
                   className="text-white absolute right-2.5 bottom-2.5 bg-white hover:bg-teritary focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
                   <svg
-                    aria-hidden="true"
                     className="w-5 h-5 text-black hover:text-white"
                     fill="none"
                     stroke="currentColor"
@@ -65,9 +65,9 @@ export default function Home() {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     ></path>
                   </svg>
@@ -76,20 +76,30 @@ export default function Home() {
             </form>
           </div>
 
-          <ul className="space-y-2 font-medium">
-            <li>
-              <h1 className="text-3xl whitespace-nowrap">{data.location}</h1>
-            </li>
-            <li>
-              <h2 className="text-2xl whitespace-nowrap">{data.date}</h2>
-            </li>
-            <li>
-              <h1 className="text-3xl whitespace-nowrap">{data.currentTemp}</h1>
-            </li>
-            <li>
-              <h1 className="text-2xl whitespace-nowrap">{data.conditions}</h1>
-            </li>
-          </ul>
+          {data && (
+            <ul className="space-y-2 font-medium">
+              <li>
+                <h1 className="text-3xl">{data.address}</h1>
+              </li>
+              <li>
+                <h2 className="text-2xl">{data.date}</h2>
+              </li>
+              <li>
+                <Image
+                  alt={data.icon}
+                  width={200}
+                  height={50}
+                  src={`/icons/${data.icon}.svg`}
+                />
+              </li>
+              <li>
+                <h1 className="text-3xl">{data.currentTemp}</h1>
+              </li>
+              <li>
+                <h1 className="text-2xl">{data.conditions}</h1>
+              </li>
+            </ul>
+          )}
         </div>
       </aside>
 
@@ -110,54 +120,60 @@ export default function Home() {
             </button>
           </div>
           <div className="p-4">
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                <p className="text-2xl">Humdity</p>
-                <p className="text-2xl">{data.humidity}</p>
+            <h2>Daily Overview</h2>
+            {data && (
+              <div>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
+                    <p className="text-2xl">Humdity</p>
+                    <p className="text-2xl">{data.humidity}</p>
+                  </div>
+                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
+                    <p className="text-2xl">Cloud Cover</p>
+                    <p className="text-2xl">{data.cloudCover}</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-4 gap-4 mb-4">
+                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
+                    <p className="text-2xl">Min temp</p>
+                    <p className="text-2xl">{data.minTemp}</p>
+                  </div>
+                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
+                    <div className="text-2xl text-gray-400 dark:text-gray-500">
+                      <p className="text-2xl">Max temp</p>
+                      <p className="text-2xl">{data.maxTemp}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
+                    <p className="text-2xl">Sunrise</p>
+                    <p className="text-2xl">{data.sunRiseTime}</p>
+                  </div>
+                  <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
+                    <p className="text-2xl">Sunset</p>
+                    <p className="text-2xl">{data.sunSetTime}</p>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                <p className="text-2xl">Cloud Cover</p>
-                <p className="text-2xl">{data.cloudCover}</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-4 gap-4 mb-4">
-              <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                <p className="text-2xl">Min temp</p>
-                <p className="text-2xl">{data.minTemp}</p>
-              </div>
-              <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                <p className="text-2xl text-gray-400 dark:text-gray-500">
-                  <p className="text-2xl">Max temp</p>
-                  <p className="text-2xl">{data.maxTemp}</p>
-                </p>
-              </div>
-              <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                <p className="text-2xl">Sunrise</p>
-                <p className="text-2xl">{data.sunRiseTime}</p>
-              </div>
-              <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
-                <p className="text-2xl">Sunset</p>
-                <p className="text-2xl">{data.sunSetTime}</p>
-              </div>
-            </div>
+            )}
           </div>
           <div className="p-4">
             <div className="grid grid-cols-5 gap-4 mb-4">
-              {data.days.map((data, idx) => {
-                return (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800"
-                  >
-                    <p className="text-2xl text-gray-400 dark:text-gray-500">
-                      {data.date}
-                      {data.icon}
-                      {data.maxTemp}
-                      {data.minTemp}
-                    </p>
-                  </div>
-                );
-              })}
+              {data &&
+                data.days.map((data, idx) => {
+                  return (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800"
+                    >
+                      <p className="text-2xl text-white dark:text-gray-500">
+                        {data.date}
+                        {data.icon}
+                        {data.maxTemp}
+                        {data.minTemp}
+                      </p>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>

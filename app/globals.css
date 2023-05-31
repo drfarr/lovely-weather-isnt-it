@@ -1,12 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import url("https://fonts.googleapis.com/css2?family=Capriola&display=swap");
 
 * {
   font-family: "Capriola", sans-serif;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html,
 body {
@@ -23,7 +23,5 @@ h3,
 h4,
 h5,
 h6 {
-  color: #fff
+  color: #fff;
 }
-
-
