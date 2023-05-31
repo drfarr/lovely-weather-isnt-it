@@ -1,3 +1,4 @@
+import { IWeatherResource } from "@/utils/WeatherAdapter.class";
 import { test, expect } from "@playwright/test";
 
 test("should return a 400 if location is missing", async ({ request }) => {
@@ -10,10 +11,22 @@ test("should return a 400 if location is missing", async ({ request }) => {
 
 test("should return a successful response", async ({ request }) => {
   const response = await request.get(`/api/weather?q=brighton`, {});
-  const { data } = await response.json();
+  const {
+    data: { data: results },
+  } = await response.json();
+
   expect(response.ok()).toBeTruthy();
   expect(response.status()).toBe(200);
-  expect(data).toHaveProperty("location");
+  expect(results).toHaveProperty("name");
+  expect(results).toHaveProperty("address");
+  expect(results).toHaveProperty("id");
+  expect(results).toHaveProperty("units");
+  expect(results).toHaveProperty("date");
+  expect(results).toHaveProperty("icon");
+  expect(results).toHaveProperty("sunRiseTime");
+  expect(results).toHaveProperty("sunSetTime");
+  expect(results).toHaveProperty("maxTemp");
+  expect(results.days.length).toBeGreaterThan(4);
 });
 
 test("should return a 405 if HTTP method is not GET", async ({ request }) => {
