@@ -13,8 +13,9 @@ dayjs.extend(isTomorrow);
  */
 export const formatDate = (value: string) => {
   const date = dayjs(value);
+
   //@ts-ignore
-  if (date.add(1, "day").isTomorrow()) {
+  if (date.isTomorrow()) {
     return "Tomorrow";
   }
   return date.format("ddd DD, MMM");
