@@ -56,11 +56,12 @@ export async function GET(request: Request) {
         status: 200,
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
+
     return jsonResponse({
       data: [],
-      message: error as string,
+      message: error.message ?? "Something went wrong",
       status: 500,
     });
   }
