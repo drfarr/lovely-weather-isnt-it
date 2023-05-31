@@ -99,7 +99,9 @@ export default function Home() {
           ) : data?.address && !loading ? (
             <ul className="space-y-6 font-medium text-center mt-20">
               <li>
-                <h1 className="text-3xl">{data.address}</h1>
+                <h1 data-cy="address" className="text-3xl">
+                  {data.address}
+                </h1>
               </li>
               <li>
                 <h2 className="text-2xl">{formatDate(data.date)}</h2>
@@ -114,7 +116,9 @@ export default function Home() {
                 />
               </li>
               <li>
-                <h1 className="text-3xl">{formatTemp(data.currentTemp)}</h1>
+                <h1 data-cy="current-temp" className="text-3xl">
+                  {formatTemp(data.currentTemp)}
+                </h1>
               </li>
               <li>
                 <h1 className="text-2xl">{data.conditions}</h1>
@@ -143,6 +147,7 @@ export default function Home() {
                       : "bg-teritary text-white";
                   return (
                     <a
+                      data-cy={unit}
                       onClick={() => {
                         setUnits(unit as Unit);
                       }}
