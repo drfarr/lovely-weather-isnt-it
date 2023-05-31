@@ -5,7 +5,7 @@ import { formatDate, formatHours, formatTempreature } from "@/utils";
 import { Unit } from "@/utils/WeatherAPI.class";
 import { IWeatherResource } from "@/utils/WeatherAdapter.class";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface FormElements extends HTMLFormControlsCollection {
   queryInput: HTMLInputElement;
@@ -17,7 +17,11 @@ interface QueryFormElement extends HTMLFormElement {
 export default function Home() {
   const [query, setQuery] = useState<string>("brighton");
   const { data, error, loading } = useWeather<IWeatherResource>(query);
+  const [displayUnits, setDisplayUnits] = useState(data?.units);
 
+  useEffect(() => {
+    setDisplayUnits(data?.units);
+  }, [data?.units]);
   if (error) {
     return "Something went wrong";
   }
@@ -111,21 +115,26 @@ export default function Home() {
         </div>
       </aside>
 
-      <div className="p-4 sm:ml-64 bg-secondary h-screen">
+      <div className="p-4 sm:ml-64 bg-secondary h-screen ">
         <div className="w-2/3 mx-auto">
-          <div className="p-4 ">
-            <button
-              type="submit"
-              className="rounded-full bg-blue-700 p-2 w-9 h-9"
-            >
-              °F
-            </button>
-            <button
-              type="submit"
-              className="rounded-full bg-blue-700 p-2 w-9 h-9"
-            >
-              °C
-            </button>
+          <div className="p-4 flex flex-row-reverse ">
+            {Object.keys(Unit).map((unit, idx) => {
+              const classes =
+                unit === displayUnits
+                  ? "bg-white text-black"
+                  : "bg-teritary text-white";
+              return (
+                <a
+                  onClick={() => {
+                    setDisplayUnits(unit as Unit);
+                  }}
+                  key={idx}
+                  className={`${classes} cursor-pointer rounded-full ml-2 p-2 w-10 h-9"`}
+                >
+                  °{unit === Unit.metric ? "C" : "F"}
+                </a>
+              );
+            })}
           </div>
           <div className="p-4">
             <h2 className="text-2xl mb-4">Daily Overview</h2>
