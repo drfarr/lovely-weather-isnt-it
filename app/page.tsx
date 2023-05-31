@@ -1,5 +1,7 @@
 "use client";
 import useWeather from "@/hooks/useWeather";
+import { formatDate, formatHours, formatTempreature } from "@/utils";
+import { Unit } from "@/utils/WeatherAPI.class";
 import { IWeatherResource } from "@/utils/WeatherAdapter.class";
 import Image from "next/image";
 import { useState } from "react";
@@ -32,6 +34,10 @@ export default function Home() {
     const value = e.currentTarget.elements.queryInput.value;
 
     setQuery(value);
+  };
+
+  const formatTemp = (value: number) => {
+    return formatTempreature(value, data?.units ?? Unit.metric);
   };
 
   return (
@@ -82,7 +88,7 @@ export default function Home() {
                 <h1 className="text-3xl">{data.address}</h1>
               </li>
               <li>
-                <h2 className="text-2xl">{data.date}</h2>
+                <h2 className="text-2xl">{formatDate(data.date)}</h2>
               </li>
               <li>
                 <Image
@@ -93,7 +99,7 @@ export default function Home() {
                 />
               </li>
               <li>
-                <h1 className="text-3xl">{data.currentTemp}</h1>
+                <h1 className="text-3xl">{formatTemp(data.currentTemp)}</h1>
               </li>
               <li>
                 <h1 className="text-2xl">{data.conditions}</h1>
@@ -136,21 +142,21 @@ export default function Home() {
                 <div className="grid grid-cols-4 gap-4 mb-4">
                   <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
                     <p className="text-2xl">Min temp</p>
-                    <p className="text-2xl">{data.minTemp}</p>
+                    <p className="text-2xl">{formatTemp(data.minTemp)}</p>
                   </div>
                   <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
                     <div className="text-2xl text-gray-400 dark:text-gray-500">
                       <p className="text-2xl">Max temp</p>
-                      <p className="text-2xl">{data.maxTemp}</p>
+                      <p className="text-2xl">{formatTemp(data.maxTemp)}</p>
                     </div>
                   </div>
                   <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
                     <p className="text-2xl">Sunrise</p>
-                    <p className="text-2xl">{data.sunRiseTime}</p>
+                    <p className="text-2xl">{formatHours(data.sunRiseTime)}</p>
                   </div>
                   <div className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800">
                     <p className="text-2xl">Sunset</p>
-                    <p className="text-2xl">{data.sunSetTime}</p>
+                    <p className="text-2xl">{formatHours(data.sunSetTime)}</p>
                   </div>
                 </div>
               </div>
@@ -166,10 +172,10 @@ export default function Home() {
                       className="flex items-center justify-center h-24 rounded bg-primary dark:bg-gray-800"
                     >
                       <p className="text-2xl text-white dark:text-gray-500">
-                        {data.date}
+                        {formatDate(data.date)}
                         {data.icon}
-                        {data.maxTemp}
-                        {data.minTemp}
+                        {formatTemp(data.maxTemp)}
+                        {formatTemp(data.minTemp)}
                       </p>
                     </div>
                   );
